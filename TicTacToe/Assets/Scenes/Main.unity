@@ -1400,6 +1400,8 @@ MonoBehaviour:
   - {fileID: 395371526}
   - {fileID: 57425324}
   - {fileID: 1394169886}
+  playerMove: 0
+  delay: 10
   gameOverPanel: {fileID: 897509080}
   gameOverText: {fileID: 624794574}
   restartButton: {fileID: 1253408323}
