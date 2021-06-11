@@ -23,7 +23,12 @@ public class PlayerColour
 public class GameManager : MonoBehaviour
 {
     public TextMeshProUGUI[] buttonTextList;
+
     private string playerSide;
+    private string computerSide;
+    public bool playerMove;
+    public float delay;
+    private int gridValue;
 
     public GameObject gameOverPanel;
     public TextMeshProUGUI gameOverText;
@@ -42,7 +47,7 @@ public class GameManager : MonoBehaviour
         gameOverPanel.SetActive(false);
         restartButton.SetActive(false);
         SetGameManagerReferenceOnButtons();
-        
+        playerMove = true;
         moveCount = 0;
     }
 
@@ -59,10 +64,12 @@ public class GameManager : MonoBehaviour
         playerSide = startingSide;
         if (playerSide == "X")
         {
+            computerSide = "O";
             SetPlayerColour(playerX, playerO);
         }
         else
         {
+            computerSide = "X";
             SetPlayerColour(playerO, playerX);
         }
         StartGame();
@@ -78,6 +85,11 @@ public class GameManager : MonoBehaviour
     public string GetPlayerSide()
     {
         return playerSide;
+    }
+
+    public string GetComputerSide()
+    {
+        return computerSide;
     }
 
     public void EndTurn()
@@ -124,6 +136,46 @@ public class GameManager : MonoBehaviour
             GameOver(playerSide);
         }
 
+        else if (buttonTextList[0].text == playerSide && buttonTextList[1].text == playerSide && buttonTextList[2].text == playerSide)
+        {
+            GameOver(computerSide);
+        }
+
+        else if (buttonTextList[3].text == playerSide && buttonTextList[4].text == playerSide && buttonTextList[5].text == playerSide)
+        {
+            GameOver(computerSide);
+        }
+
+        else if (buttonTextList[6].text == playerSide && buttonTextList[7].text == playerSide && buttonTextList[8].text == playerSide)
+        {
+            GameOver(computerSide);
+        }
+
+        else if (buttonTextList[0].text == playerSide && buttonTextList[3].text == playerSide && buttonTextList[6].text == playerSide)
+        {
+            GameOver(computerSide);
+        }
+
+        else if (buttonTextList[1].text == playerSide && buttonTextList[4].text == playerSide && buttonTextList[7].text == playerSide)
+        {
+            GameOver(computerSide);
+        }
+
+        else if (buttonTextList[2].text == playerSide && buttonTextList[5].text == playerSide && buttonTextList[8].text == playerSide)
+        {
+            GameOver(computerSide);
+        }
+
+        else if (buttonTextList[0].text == playerSide && buttonTextList[4].text == playerSide && buttonTextList[8].text == playerSide)
+        {
+            GameOver(computerSide);
+        }
+
+        else if (buttonTextList[2].text == playerSide && buttonTextList[4].text == playerSide && buttonTextList[6].text == playerSide)
+        {
+            GameOver(computerSide);
+        }
+
         else if (moveCount >= 9)
         {
             GameOver("draw");
@@ -132,6 +184,7 @@ public class GameManager : MonoBehaviour
         else
         {
             ChangeSides();
+            delay = 10;
         }
     }
 
@@ -145,9 +198,11 @@ public class GameManager : MonoBehaviour
 
     void ChangeSides()
     {
-        playerSide = (playerSide == "X") ? "O" : "X";
+        //playerSide = (playerSide == "X") ? "O" : "X";
+        playerMove = (playerMove) ? false : true;
 
-        if (playerSide == "X")
+        if (playerMove)
+        //if (playerSide == "X")
         {
             SetPlayerColour(playerX, playerO);
         }
@@ -186,6 +241,8 @@ public class GameManager : MonoBehaviour
         SetPlayerButtons(true);
         SetPlayerColoursInactive();
         startInfo.SetActive(true);
+        playerMove = true;
+        delay = 10;
 
         for (int i = 0; i < buttonTextList.Length; i++)
         {
@@ -226,6 +283,19 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (playerMove == false)
+        {
+            delay += delay * Time.deltaTime;
+            if (delay >= 100)
+            {
+                gridValue = Random.Range(0, 8);
+                if (buttonTextList[gridValue].GetComponentInParent<Button>().interactable == true)
+                {
+                    buttonTextList[gridValue].text = GetComputerSide();
+                    buttonTextList[gridValue].GetComponentInParent<Button>().interactable = false;
+                    EndTurn();
+                }
+            }
+        }
     }
 }
